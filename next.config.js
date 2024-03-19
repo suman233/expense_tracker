@@ -31,7 +31,7 @@ module.exports = {
     return [
       {
         source: "/",
-        destination: "/dashboard",
+        destination: "/expense",
         permanent: false
       }
     ];

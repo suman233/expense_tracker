@@ -13,8 +13,8 @@ export interface NavItem {
 
 const navConfig: NavItem[] = [
   {
-    title: "dashboard",
-    path: "/dashboard",
+    title: "Expense Board",
+    path: "/expense",
     icon: DashboardIcon,
     children: [],
     hasChild: false
@@ -57,7 +57,7 @@ const navConfig: NavItem[] = [
   },
   {
     title: "expense",
-    path: "/expense",
+    path: "/expenserecord",
     icon: PersonIcon,
     children: [],
     hasChild: false

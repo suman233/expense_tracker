@@ -2,8 +2,10 @@ import AppWidgetSummaryCard from "@/components/cards/AppWidgetSummaryCard";
 
 import DashboardLayout from "@/layout/dashboard/DashboardLayout";
 import { Container, Grid, Typography } from "@mui/material";
+import { getCookie } from "cookies-next";
 
 import dynamic from "next/dynamic";
+import { useState } from "react";
 
 const AppWebsiteVisitsChart = dynamic(
   () => import("@/components/chart/AppWebsiteVisitsChart"),
@@ -11,13 +13,18 @@ const AppWebsiteVisitsChart = dynamic(
 );
 
 export default function Home() {
+  // const [name , setName]=useState()
+  const name = getCookie("username");
   return (
     <DashboardLayout>
       <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back 👋
-        </Typography>
-
+        <div>
+          <Typography variant="h4" sx={{ mb: 5 }}>
+            Hi! Welcome back {name?.charAt(0).toUpperCase()}
+            {name?.slice(1)}
+            👋
+          </Typography>
+        </div>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummaryCard

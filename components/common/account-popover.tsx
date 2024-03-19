@@ -7,6 +7,11 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import { Theme, alpha } from "@mui/material/styles";
 import React, { useState } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import { Button } from "@mui/material";
+import { supabase } from "@/lib/initSupabase";
+import { deleteCookie } from "cookies-next";
 
 interface AccountPopoverProps {
   // You can define any additional props here
@@ -29,13 +34,20 @@ const MENU_OPTIONS = [
 
 const AccountPopover: React.FC<AccountPopoverProps> = () => {
   const [open, setOpen] = useState<HTMLElement | null>(null);
+  const router = useRouter();
 
+  // const supabase = createClientComponentClient();
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(event.currentTarget);
   };
 
   const handleClose = () => {
     setOpen(null);
+  };
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    deleteCookie('token')
+    router.push('/auth/login')
   };
 
   return (
@@ -106,7 +118,7 @@ const AccountPopover: React.FC<AccountPopoverProps> = () => {
           onClick={handleClose}
           sx={{ typography: "body2", color: "error.main", py: 1.5 }}
         >
-          Logout
+          <Button onClick={handleSignOut}>Logout</Button>
         </MenuItem>
       </Popover>
     </>
