@@ -46,8 +46,9 @@ const AccountPopover: React.FC<AccountPopoverProps> = () => {
   };
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    deleteCookie('token')
-    router.push('/auth/login')
+    deleteCookie("token");
+    localStorage.removeItem("userid");
+    router.push("/auth/login");
   };
 
   return (

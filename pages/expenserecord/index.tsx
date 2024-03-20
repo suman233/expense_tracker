@@ -93,7 +93,7 @@ const expenseRecord = () => {
       editable: true
     },
     {
-      field: "expense",
+      field: "expense_amount",
       headerName: "Expenses (Rs.)",
       width: 140,
       editable: true

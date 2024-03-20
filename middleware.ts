@@ -2,7 +2,9 @@ import { getCookie } from "cookies-next";
 import { NextRequest, NextResponse } from "next/server";
 // If the incoming request has the "token" cookie
 export function middleware(request: NextRequest) {
-  const has_token = getCookie('token')
+  const has_token = request.cookies.get(
+    process.env.NEXT_APP_TOKEN_NAME!!
+  )?.name
 
   if (has_token === undefined || has_token === null) {
     console.log('token', has_token);

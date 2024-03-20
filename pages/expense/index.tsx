@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { Box, Container } from "@mui/system";
+import { Box, Container } from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -21,37 +21,14 @@ import { Controller, useForm } from "react-hook-form";
 import { MdOutlineDescription } from "react-icons/md";
 import { SlCalender } from "react-icons/sl";
 import { TbCategoryPlus } from "react-icons/tb";
+import { supabase } from "@/lib/initSupabase";
 
 export default function Transaction() {
   const [value, setValue] = useState<Dayjs | null>(dayjs()); // Initialize with current date
-  const { register, control, handleSubmit } = useForm();
+  const { register, control, handleSubmit, reset } = useForm();
   // console.log(supabase);
-  const supabase = createClientComponentClient();
   const router = useRouter();
 
-  // const [fetchError,setFetchError]=useState(null);
-  //   const [category, setCategory] = useState([]);
-  //   const [count, setCount] = useState(null);
-  //   useEffect(() => {
-  //     const fetchUsers = async () => {
-  //       const { data, error } = await supabase
-  //         .from("category")
-  //         .select("category_name");
-
-  //       if (error) {
-  //         // setFetchError()
-  //         setCategory(null);
-  //         console.log(error);
-  //       }
-  //       if (data) {
-  //         setCategory(data);
-  //         console.log(data);
-  //         // setFetchError(null)
-  //       }
-  //     };
-
-  //     fetchUsers();
-  //   }, []);
   const { data: categories } = useQuery({
     queryKey: ["catlists"],
     queryFn: async () => {
@@ -181,7 +158,7 @@ export default function Transaction() {
                 {categories &&
                   categories?.map((item) => {
                     return (
-                      <Grid item md={3} xs={12}>
+                      <Grid item md={3} sm={4} xs={12}>
                         <span key={item.id}>
                           <Chip label={item.category_name} />
                         </span>
@@ -195,3 +172,4 @@ export default function Transaction() {
       </Container>
   );
 }
+

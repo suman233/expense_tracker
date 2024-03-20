@@ -1,5 +1,4 @@
 // import { loginMutation, loginMutationPayload } from "@/api/functions/user.api";
-// import { useAppDispatch } from "@/hooks/redux/useAppDispatch";
 // import { useAppSelector } from "@/hooks/redux/useAppSelector";
 // import validationText from "@/json/messages/validationText";
 // import { setCookieClient } from "@/lib/functions/storage.lib";
@@ -10,7 +9,6 @@
 // import { useMutation } from "@tanstack/react-query";
 
 // export default function LoginView() {
-//   const dispatch = useAppDispatch();
 //   const { isLoggedIn } = useAppSelector((s) => s.userSlice);
 
 //   const { mutate, isPending } = useMutation({
@@ -56,6 +54,7 @@
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useAppDispatch } from "@/hooks/redux/useAppDispatch";
 import Logo from "@/components/logo/logo";
 import validationText from "@/json/messages/validationText";
 import { emailRegex } from "@/lib/regex";
@@ -80,23 +79,7 @@ import { useState } from "react";
 import { setCookie } from "cookies-next";
 import { toast } from "sonner";
 import * as yup from "yup";
-
-// import type { Database } from '@/lib/database.types'
-
-// import { login, signup } from 'lib/functions/action'
-
-// export default function LoginPage() {
-//   return (
-//     <form>
-//       <label htmlFor="email">Email:</label>
-//       <input id="email" name="email" type="email" required />
-//       <label htmlFor="password">Password:</label>
-//       <input id="password" name="password" type="password" required />
-//       <button onClick={()=>login}>Log in</button>
-//       <button onClick={()=>signup}>Sign up</button>
-//     </form>
-//   )
-// }
+import { setCookieClient } from "@/lib/functions/storage.lib";
 
 const schema = yup.object().shape({
   email: yup
@@ -110,39 +93,41 @@ const schema = yup.object().shape({
 });
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const {
-        handleSubmit,
-        register,
-        formState: { errors }
-      } = useForm({
-        resolver: yupResolver(schema),
-        mode: "all",
-        defaultValues: {
-          email: "",
-          password: ""
-        }
-      });
+    handleSubmit,
+    register,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "all",
+    defaultValues: {
+      email: "",
+      password: ""
+    }
+  });
   // const supabase = createClientComponentClient();
   const theme = useTheme();
 
   const [showPassword, setShowPassword] = useState(false);
-  const handleSignIn = async (data: {email: string, password: string}) => {
+  const handleSignIn = async (data: { email: string; password: string }) => {
     try {
       const resp = await supabase.auth.signInWithPassword(data);
       console.log("resp", resp);
       if (resp.data.session?.user) {
+        setCookieClient(process.env.NEXT_APP_TOKEN_NAME!!, resp.data.session.access_token);
+        dispatch(setAccessToken(resp.data.session.access_token));
         router.push("/dashboard");
         localStorage.setItem("userid", resp.data.session.user.id);
         localStorage.setItem(
           "username",
           resp.data.user.email?.slice(0, 5) as string
         );
-        toast.success("Logged in successfully")
+        toast.success("Logged in successfully");
         setCookie("token", resp.data.session.access_token);
+
         setCookie("username", resp.data.user.email?.slice(0, 5) as string);
         return resp;
       } else if (resp.error) {
@@ -237,7 +222,6 @@ export default function Login() {
             </Card>
           </Stack>
         </Box>
-       
       </Container>
     </>
   );
